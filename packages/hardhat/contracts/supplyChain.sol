@@ -15,6 +15,12 @@ contract SupplyChain {
         ProductStatus status;
     }
 
+    constructor() {
+        owner = msg.sender;  
+    }
+
+    address public owner;
+
     mapping(uint => Product) public products;
     uint public productCount;
 
