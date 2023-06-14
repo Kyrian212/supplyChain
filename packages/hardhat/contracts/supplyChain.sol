@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract SupplyChain {
-    enum ProductStatus { ForSale, Processed, Shipped, Sold }
+    enum ProductStatus { ForSale, Processed, Sold, Shipped }
 
     struct Product {
         uint productId;
@@ -15,6 +15,8 @@ contract SupplyChain {
         ProductStatus status;
     }
 
+
+
     constructor() {
         owner = msg.sender;  
     }
@@ -26,8 +28,8 @@ contract SupplyChain {
 
     event ProductAdded(uint productId, string productName, uint quantity, uint price, address farmer);
     event ProductProcessed(uint productId, address distributor);
+    event ProductSold(uint productId, address retailer);
     event ProductShipped(uint productId, address retailer);
-    event ProductSold(uint productId, address consumer);
 
     modifier onlyFarmer(uint _productId) {
         require(msg.sender == products[_productId].farmer, "Only the farmer can perform this action.");
@@ -63,12 +65,6 @@ contract SupplyChain {
         emit ProductProcessed(_productId, msg.sender);
     }
 
-    function shipProduct(uint _productId) public productExists(_productId) onlyRetailer(_productId) {
-        require(products[_productId].status == ProductStatus.Sold, "Product not sold yet.");
-
-        products[_productId].status = ProductStatus.Shipped;
-        emit ProductShipped(_productId, msg.sender);
-    }
 
     function buyProduct(uint _productId) public payable productExists(_productId) {
         require(products[_productId].status == ProductStatus.Processed, "Product not available for sale.");
@@ -78,4 +74,21 @@ contract SupplyChain {
         products[_productId].status = ProductStatus.Sold;
         emit ProductSold(_productId, msg.sender);
     }
+
+
+    function shipProduct(uint _productId) public productExists(_productId) onlyRetailer(_productId) {
+        require(products[_productId].status == ProductStatus.Sold, "Product not sold yet.");
+
+        products[_productId].status = ProductStatus.Shipped;
+        emit ProductShipped(_productId, msg.sender);
+    }
 }
+
+
+
+
+
+
+
+
+ 
