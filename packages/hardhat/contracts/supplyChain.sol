@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract SupplyChain {
+    
     enum ProductStatus { ForSale, Processed, Sold, Shipped }
 
     struct Product {
@@ -88,7 +89,7 @@ contract SupplyChain {
     }
 
     function buyProduct(uint256 _productId) public payable productExists(_productId) {
-        require(products[_productId].status == ProductStatus.Processed, "Product not available for sale.");
+        require(products[_productId].status == ProductStatus.ForSale, "Product not available for sale.");
         require(msg.value >= products[_productId].price, "Insufficient payment.");
 
         products[_productId].retailer = payable(msg.sender);
